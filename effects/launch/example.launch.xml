@@ -1,0 +1,17 @@
+<launch>
+  <node_container pkg="rclcpp_components" exec="component_container" name="pedalboard_container" namespace="">
+    <composable_node pkg="junction_box" plugin="pedalboard::JunctionBox" name="junction_box" />
+
+    <composable_node pkg="effects" plugin="pedalboard::Distortion" name="distortion">
+      <remap from="~/in" to="junction_box/in" />
+      <remap from="~/out" to="delay/in" />
+      <param name="gain" value="100.0" />
+      <param name="volume" value="0.1" />
+    </composable_node>
+
+    <composable_node pkg="effects" plugin="pedalboard::Delay" name="delay">
+      <remap from="~/out" to="junction_box/out" />
+      <param name="time" value="300" />
+    </composable_node>
+  </node_container>
+</launch>
