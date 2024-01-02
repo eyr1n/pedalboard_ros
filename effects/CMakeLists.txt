@@ -77,7 +77,7 @@ target_include_directories(cabinet_sim_component PRIVATE
 )
 rclcpp_components_register_node(cabinet_sim_component
   PLUGIN "pedalboard::CabinetSim"
-  EXECUTABLE cabinet
+  EXECUTABLE cabinet_sim
 )
 
 ament_export_targets(export_${PROJECT_NAME}_component HAS_LIBRARY_TARGET)
@@ -87,7 +87,11 @@ ament_export_dependencies(
   pedalboard_msgs
 )
 install(
-  TARGETS passthrough_component distortion_component delay_component
+  TARGETS
+    passthrough_component
+    distortion_component
+    delay_component
+    cabinet_sim_component
   EXPORT export_${PROJECT_NAME}_component
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
