@@ -23,8 +23,9 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(pedalboard_msgs REQUIRED)
 
-add_library(${PROJECT_NAME}_component SHARED src/junction_box.cpp)
 pkg_check_modules(JACK REQUIRED jack)
+
+add_library(${PROJECT_NAME}_component SHARED src/junction_box.cpp)
 target_link_libraries(${PROJECT_NAME}_component ${JACK_LIBRARIES} Boost::boost)
 target_include_directories(${PROJECT_NAME}_component PRIVATE ${JACK_INCLUDE_DIRS})
 ament_target_dependencies(${PROJECT_NAME}_component
