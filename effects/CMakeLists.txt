@@ -21,6 +21,9 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(pedalboard_msgs REQUIRED)
 
+pkg_check_modules(SNDFILE REQUIRED sndfile)
+pkg_check_modules(FFTW REQUIRED fftw3f)
+
 # passthrough
 add_library(passthrough_component SHARED src/passthrough.cpp)
 ament_target_dependencies(passthrough_component
@@ -57,6 +60,26 @@ rclcpp_components_register_node(delay_component
   EXECUTABLE delay
 )
 
+# cabinet_sim
+add_library(cabinet_sim_component SHARED src/cabinet_sim.cpp)
+ament_target_dependencies(cabinet_sim_component
+  rclcpp
+  rclcpp_components
+  pedalboard_msgs
+)
+target_link_libraries(cabinet_sim_component
+    ${SNDFILE_LIBRARIES}
+    ${FFTW_LIBRARIES}
+)
+target_include_directories(cabinet_sim_component PRIVATE
+    ${SNDFILE_INCLUDE_DIRS}
+    ${FFTW_INCLUDE_DIRS}
+)
+rclcpp_components_register_node(cabinet_sim_component
+  PLUGIN "pedalboard::CabinetSim"
+  EXECUTABLE cabinet_sim
+)
+
 ament_export_targets(export_${PROJECT_NAME}_component HAS_LIBRARY_TARGET)
 ament_export_dependencies(
   rclcpp
@@ -64,7 +87,11 @@ ament_export_dependencies(
   pedalboard_msgs
 )
 install(
-  TARGETS passthrough_component distortion_component delay_component
+  TARGETS
+    passthrough_component
+    distortion_component
+    delay_component
+    cabinet_sim_component
   EXPORT export_${PROJECT_NAME}_component
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
